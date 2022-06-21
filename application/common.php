@@ -73,3 +73,26 @@ function formatPermissions(array $permissions)
 
     return $result;
 }
+
+/**
+ * 返回输出信息
+ * @param string $msg
+ * @param array $data
+ * @param int $status
+ * @return array
+ */
+function outputMsg($msg = '', $data = array(), $status = 200) {
+    $result = array();
+    $result['status'] = $status;
+    $result['msg'] = $msg;
+    $result['data'] = $data;
+    return $result;
+}
+
+function outputSuccess($msg = '', $data = array(), $status = 200) {
+    return outputMsg($msg, $data, $status);
+}
+
+function outputError($msg = '', $data = array(), $status = 400) {
+    return outputMsg($msg, $data, $status);
+}

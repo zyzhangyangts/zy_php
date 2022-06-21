@@ -83,7 +83,13 @@ Route::group('', function () {
             Route::put(':bid', 'api/v1.Book/update');
             // 删除图书
             Route::delete(':bid', 'api/v1.Book/delete');
+
+            // 新建图书
+            Route::post('add', 'api/v1.Book/add');
         });
+
+        // 商户创建
+        Route::post('merchant/add', 'api/v1.Merchant/add');
 
     });
 })->middleware(['Authentication', 'ReflexValidate'])->allowCrossDomain();

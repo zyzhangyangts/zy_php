@@ -9,12 +9,20 @@
 namespace app\api\controller\v1;
 
 use app\api\model\Book as BookModel;
+use app\api\service\MerchantService;
 use think\facade\Hook;
 use think\Request;
 use think\response\Json;
 
 class Book
 {
+    public function add(MerchantService $MerchantService) {
+        $params = $this->request->param();
+        $validate = $this->validate($params, 'app\api\validate\Merchant');
+        $result = $MerchantService->add($params);
+        return $result;
+    }
+
     /**
      * 查询指定bid的图书
      * @param $bid
