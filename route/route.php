@@ -90,6 +90,13 @@ Route::group('', function () {
 
         // 商户创建
         Route::post('merchant/add', 'api/v1.Merchant/add');
+        // 商户编辑
+        Route::post('merchant/edit', 'api/v1.Merchant/edit');
+        // 商户创建
+        Route::get('merchant/info', 'api/v1.Merchant/info');
+
+        // 商户创建
+        Route::get('merchant/list', 'api/v1.Merchant/list');
 
     });
 })->middleware(['Authentication', 'ReflexValidate'])->allowCrossDomain();
