@@ -1,53 +1,54 @@
 <?php
 /**
- * 商户 service
+ * 商品分类 service
  * @author zy
  */
 
 namespace app\api\service;
 
 
+use app\api\model\MerchantModel;
 use think\facade\Config;
 use think\facade\Request;
 use UnexpectedValueException;
-use app\api\model\MerchantModel;
+use app\api\model\GoodsClassModel;
 use think\db;
 
-class MerchantService
+class GoodsClassService
 {
     /**
-     * 创建商户
+     * 创建商品分类
      * @param $params
      * @return array
      */
     public function add($params) {
-        $MerchantModel = new MerchantModel();
+        $GoodsClassModel = new GoodsClassModel();
         $params['status'] = 1;
         $params['create_time'] = date('Y-m-d H:i:s');
         $params['update_time'] = date('Y-m-d H:i:s');
-        $res = $MerchantModel->insert($params);
+        $res = $GoodsClassModel->insert($params);
         if(!$res) {
-            return outputError('创建商户失败');
+            return outputError('创建商品分类失败');
         }
 
-        return outputSuccess('创建商户成功');
+        return outputSuccess('创建商品分类成功');
     }
 
     public function edit($params) {
-        if(!isset($params['merchant_id'])) {
-            return outputError('请输入商户ID');
+        if(!isset($params['goods_class_id'])) {
+            return outputError('请输入商品分类ID');
         }
 
-        $merchantId = $params['merchant_id'];
-        unset($params['merchant_id']);
-        $info = $this->info($merchantId);
+        $goodsClassId = $params['goods_class_id'];
+        unset($params['goods_class_id']);
+        $info = $this->info($goodsClassId);
         if(empty($info)) {
-            return outputError('商户信息不存在');
+            return outputError('商品分类信息不存在');
         }
 
-        $MerchantModel = new MerchantModel();
+        $GoodsClassModel = new GoodsClassModel();
         $params['update_time'] = date('Y-m-d H:i:s');
-        $res = $MerchantModel->where('merchant_id', $merchantId)->update($params);
+        $res = $GoodsClassModel->where('goods_class_id', $goodsClassId)->update($params);
         if(!$res) {
             return outputError('编辑失败');
         }
@@ -56,20 +57,20 @@ class MerchantService
     }
 
     /**
-     * 获取商户信息
-     * @param $merchantId
+     * 获取商品分类信息
+     * @param $goodsClassId
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function info($merchantId) {
-        if($merchantId <= 0) {
+    public function info($goodsClassId) {
+        if($goodsClassId <= 0) {
             return [];
         }
 
-        $MerchantModel = new MerchantModel();
-        $info = $MerchantModel->where('merchant_id', $merchantId)->find();
+        $GoodsClassModel = new GoodsClassModel();
+        $info = $GoodsClassModel->where('goods_class_id', $goodsClassId)->find();
         if(empty($info)) {
             return [];
         }
@@ -87,33 +88,29 @@ class MerchantService
     public function list($params) {
         $page = isset($params['page']) ? $params['page'] : 1;
         $pageSize = isset($params['page']) ? $params['page'] : 20;
-        $marketId = isset($params['market_id']) ? $params['market_id'] : 0;
         $status = isset($params['status']) ? $params['status'] : -1;
 
-        $MerchantModel = MerchantModel::where('1=1');
-        if($marketId > 0) {
-            $MerchantModel->where('market_id', $marketId);
-        }
+        $GoodsClassModel = GoodsClassModel::where('1=1');
 
         if($status > -1) {
-            $MerchantModel->where('status', $status);
+            $GoodsClassModel->where('status', $status);
         }
 
-        $allData = $MerchantModel->paginate($pageSize, false, ["page" => $page])->toArray();
-        //var_dump($MerchantModel->getlastsql());exit;
+        $allData = $GoodsClassModel->paginate($pageSize, false, ["page" => $page])->toArray();
+        //var_dump($GoodsClassModel->getlastsql());exit;
         return $allData;
     }
 
     /**
      * 设置状态
-     * @param $merchantId
+     * @param $goodsClassId
      * @param $status
      * @return array
      * @throws \think\Exception
      * @throws \think\exception\PDOException
      */
-    public function setStatus($merchantId, $status) {
-        if($merchantId <= 0) {
+    public function setStatus($goodsClassId, $status) {
+        if($goodsClassId <= 0) {
             return outputError('请输入商户ID');
         }
 
@@ -124,7 +121,7 @@ class MerchantService
         $update = [];
         $update['status'] = $status;
         $update['update_time'] = date('Y-m-d H:i:s');
-        $res = MerchantModel::where('merchant_id', $merchantId)->update($update);
+        $res = GoodsClassModel::where('goods_class_id', $goodsClassId)->update($update);
         if($res) {
             return outputSuccess('更改成功');
         }else {
@@ -132,5 +129,4 @@ class MerchantService
         }
 
     }
-
 }

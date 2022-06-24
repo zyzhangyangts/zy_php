@@ -97,6 +97,20 @@ Route::group('', function () {
 
         // 商户创建
         Route::get('merchant/list', 'api/v1.Merchant/list');
+        // 商户更改状态
+        Route::get('merchant/setStatus', 'api/v1.Merchant/setStatus');
+
+        // 商品分类创建
+        Route::post('goods_class/add', 'api/v1.GoodsClass/add');
+        // 商品分类编辑
+        Route::post('goods_class/edit', 'api/v1.GoodsClass/edit');
+        // 商品分类创建
+        Route::get('goods_class/info', 'api/v1.GoodsClass/info');
+
+        // 商品分类创建
+        Route::get('goods_class/list', 'api/v1.GoodsClass/list');
+        // 商品分类更改状态
+        Route::get('goods_class/setStatus', 'api/v1.GoodsClass/setStatus');
 
     });
 })->middleware(['Authentication', 'ReflexValidate'])->allowCrossDomain();

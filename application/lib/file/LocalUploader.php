@@ -19,6 +19,9 @@ use think\facade\Env;
  */
 class LocalUploader extends File
 {
+    //private static $allow_type = array ('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png', 'image/bmp', 'image/x-icon', 'text/plain', 'application/vnd.ms-excel', 'application/msword', 'amr', 'mp3', 'wav' );
+    private static $allow_type = array ('image/gif', 'image/jpeg', 'image/pjpeg', 'image/x-png', 'image/png', 'image/bmp', 'image/x-icon');
+
     /**
      * @return array
      * @throws FileException
@@ -28,6 +31,10 @@ class LocalUploader extends File
         $ret = [];
         $host = Config::get('file.host') ?? "http://127.0.0.1:5000";
         foreach ($this->files as $key => $file) {
+            if (!in_array($file->getInfo()['type'], self::$allow_type )) {
+                return outputError('文件格式不允许上传');
+            }
+
             $md5 = $this->generateMd5($file);
             $exists = LinFile::get(['md5' => $md5]);
             if ($exists) {
