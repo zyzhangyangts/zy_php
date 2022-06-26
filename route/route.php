@@ -123,6 +123,17 @@ Route::group('', function () {
         // 商品更改状态
         Route::get('goods/setStatus', 'api/v1.Goods/setStatus');
 
+        // 推荐位创建
+        Route::post('recommend/add', 'api/v1.Recommend/add');
+        // 推荐位编辑
+        Route::post('recommend/edit', 'api/v1.Recommend/edit');
+        // 推荐位创建
+        Route::get('recommend/info', 'api/v1.Recommend/info');
+        // 推荐位创建
+        Route::get('recommend/list', 'api/v1.Recommend/list');
+        // 推荐位更改状态
+        Route::get('recommend/setStatus', 'api/v1.Recommend/setStatus');
+
     });
 })->middleware(['Authentication', 'ReflexValidate'])->allowCrossDomain();
 
