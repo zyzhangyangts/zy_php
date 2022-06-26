@@ -1,6 +1,9 @@
 <?php
 
 return [
+    "dev_host" => 'http://api.admin.zy.com',
+    "test_host" => 'http://api.admin.zy.com',
+    "host" => 'http://api.admin.zy.com',
     "store_dir" => 'uploads',       # 文件的存储路径
     "single_limit" => 1024 * 1024 * 2, # 单个文件的大小限制，默认2M
     "total_limit"=> 1024 * 1024 * 20, # 所有文件的大小限制，默认20M

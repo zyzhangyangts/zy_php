@@ -18,12 +18,9 @@ class GoodsClass extends BaseController
      * 创建商品分类
      * @param GoodsClassService $GoodsClassService
      * {
-        "market_id": "1",
-        "merchant_name": "良友菜店",
-        "merchant_photo": "http://aasdf.aads.com/merchant/photo/asdfsf.jpg",
-        "merchant_score": 3.5,
-        "start_delivery_price": 20,
-        "delivery_price": "1.5"
+        "goods_class_name":"菌菇类",
+        "parent_id":1,
+        "photo_url":"http://api.admin.zy.com/uploads/20220622/3c11e9f831a4ea73e21b6d62b99ed57f.jpeg"
         }
      * @return array
      */
@@ -40,7 +37,7 @@ class GoodsClass extends BaseController
 
     public function edit(GoodsClassService $GoodsClassService) {
         $params = $this->request->param();
-        $validate = $this->validate($params, 'app\api\validate\Merchant');
+        $validate = $this->validate($params, 'app\api\validate\GoodsClass');
         if($validate !== true) {
             return outputError($validate);
         }
@@ -87,7 +84,7 @@ class GoodsClass extends BaseController
      */
     public function setStatus(GoodsClassService $GoodsClassService) {
         $goodsClassId = $this->request->param('goods_class_id/d', 0);
-        $status = $this->request->param('goods_class_id/d', 0);
+        $status = $this->request->param('status/d', 0);
         $result = $GoodsClassService->setStatus($goodsClassId, $status);
         return $result;
     }

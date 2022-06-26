@@ -96,3 +96,19 @@ function outputSuccess($msg = '', $data = array(), $status = 200) {
 function outputError($msg = '', $data = array(), $status = 400) {
     return outputMsg($msg, $data, $status);
 }
+
+function isDev() {
+    return getenv('ENV') === "dev";
+}
+
+function isTest() {
+    return getenv('ENV') === "test";
+}
+
+function isProd() {
+    return getenv('ENV') === "prod";
+}
+
+function getEnvName() {
+    return getenv('ENV');
+}

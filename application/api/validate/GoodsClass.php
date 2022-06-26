@@ -13,6 +13,6 @@ class GoodsClass extends BaseValidate
     ];
 
     protected $message = [
-        'goods_class_name.require' => '请输入商户名称',
+        'goods_class_name.require' => '请输入商品分类名称',
     ];
 }

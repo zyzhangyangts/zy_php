@@ -94,11 +94,11 @@ Route::group('', function () {
         Route::post('merchant/edit', 'api/v1.Merchant/edit');
         // 商户创建
         Route::get('merchant/info', 'api/v1.Merchant/info');
-
         // 商户创建
         Route::get('merchant/list', 'api/v1.Merchant/list');
         // 商户更改状态
         Route::get('merchant/setStatus', 'api/v1.Merchant/setStatus');
+
 
         // 商品分类创建
         Route::post('goods_class/add', 'api/v1.GoodsClass/add');
@@ -106,11 +106,22 @@ Route::group('', function () {
         Route::post('goods_class/edit', 'api/v1.GoodsClass/edit');
         // 商品分类创建
         Route::get('goods_class/info', 'api/v1.GoodsClass/info');
-
         // 商品分类创建
         Route::get('goods_class/list', 'api/v1.GoodsClass/list');
         // 商品分类更改状态
         Route::get('goods_class/setStatus', 'api/v1.GoodsClass/setStatus');
+
+
+        // 商品创建
+        Route::post('goods/add', 'api/v1.Goods/add');
+        // 商品编辑
+        Route::post('goods/edit', 'api/v1.Goods/edit');
+        // 商品创建
+        Route::get('goods/info', 'api/v1.Goods/info');
+        // 商品创建
+        Route::get('goods/list', 'api/v1.Goods/list');
+        // 商品更改状态
+        Route::get('goods/setStatus', 'api/v1.Goods/setStatus');
 
     });
 })->middleware(['Authentication', 'ReflexValidate'])->allowCrossDomain();

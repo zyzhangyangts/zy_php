@@ -35,11 +35,11 @@ class GoodsClassService
     }
 
     public function edit($params) {
-        if(!isset($params['goods_class_id'])) {
+        if(!isset($params['goods_class_id']) || $params['goods_class_id'] <= 0) {
             return outputError('请输入商品分类ID');
         }
 
-        $goodsClassId = $params['goods_class_id'];
+        $goodsClassId = intval($params['goods_class_id']);
         unset($params['goods_class_id']);
         $info = $this->info($goodsClassId);
         if(empty($info)) {
@@ -65,6 +65,7 @@ class GoodsClassService
      * @throws \think\exception\DbException
      */
     public function info($goodsClassId) {
+        $goodsClassId = intval($goodsClassId);
         if($goodsClassId <= 0) {
             return [];
         }
@@ -87,10 +88,14 @@ class GoodsClassService
      */
     public function list($params) {
         $page = isset($params['page']) ? $params['page'] : 1;
-        $pageSize = isset($params['page']) ? $params['page'] : 20;
+        $pageSize = isset($params['page_size']) ? $params['page_size'] : 20;
+        $parentId = isset($params['parent_id']) ? $params['parent_id'] : -1;
         $status = isset($params['status']) ? $params['status'] : -1;
 
         $GoodsClassModel = GoodsClassModel::where('1=1');
+        if($parentId > -1) {
+            $GoodsClassModel->where('parent_id', $parentId);
+        }
 
         if($status > -1) {
             $GoodsClassModel->where('status', $status);
@@ -110,6 +115,7 @@ class GoodsClassService
      * @throws \think\exception\PDOException
      */
     public function setStatus($goodsClassId, $status) {
+        $goodsClassId = intval($goodsClassId);
         if($goodsClassId <= 0) {
             return outputError('请输入商户ID');
         }

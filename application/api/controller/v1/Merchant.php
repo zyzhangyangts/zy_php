@@ -92,7 +92,7 @@ class Merchant extends BaseController
      */
     public function setStatus(MerchantService $MerchantService) {
         $merchantId = $this->request->param('merchant_id/d', 0);
-        $status = $this->request->param('merchant_id/d', 0);
+        $status = $this->request->param('status/d', 0);
         $result = $MerchantService->setStatus($merchantId, $status);
         return $result;
     }

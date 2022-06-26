@@ -29,7 +29,14 @@ class LocalUploader extends File
     public function upload()
     {
         $ret = [];
-        $host = Config::get('file.host') ?? "http://127.0.0.1:5000";
+        if(isDev()) {
+            $host = Config::get('file.dev_host') ?? "http://127.0.0.1:5000";
+        }else if(isTest()) {
+            $host = Config::get('file.test_host') ?? "http://127.0.0.1:5000";
+        }else if(isProd()) {
+            $host = Config::get('file.host') ?? "http://127.0.0.1:5000";
+        }
+
         foreach ($this->files as $key => $file) {
             if (!in_array($file->getInfo()['type'], self::$allow_type )) {
                 return outputError('文件格式不允许上传');
