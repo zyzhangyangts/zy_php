@@ -127,12 +127,15 @@ Route::group('', function () {
         Route::post('recommend/add', 'api/v1.Recommend/add');
         // 推荐位编辑
         Route::post('recommend/edit', 'api/v1.Recommend/edit');
-        // 推荐位创建
+        // 推荐位信息
         Route::get('recommend/info', 'api/v1.Recommend/info');
         // 推荐位创建
         Route::get('recommend/list', 'api/v1.Recommend/list');
         // 推荐位更改状态
         Route::get('recommend/setStatus', 'api/v1.Recommend/setStatus');
+
+        // 推荐位.添加推荐明细
+        Route::post('recommend/addItem', 'api/v1.Recommend/addItem');
 
     });
 })->middleware(['Authentication', 'ReflexValidate'])->allowCrossDomain();

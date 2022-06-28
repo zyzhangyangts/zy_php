@@ -11,6 +11,7 @@ use think\facade\Config;
 use think\facade\Request;
 use UnexpectedValueException;
 use app\api\model\RecommendModel;
+use app\api\model\RecommendLogModel;
 use think\db;
 
 class RecommendService
@@ -22,6 +23,7 @@ class RecommendService
      */
     public function add($params) {
         $RecommendModel = new RecommendModel();
+        $params['recommend_data'] = '';
         $params['status'] = 1;
         $params['create_time'] = date('Y-m-d H:i:s');
         $params['update_time'] = date('Y-m-d H:i:s');
@@ -76,6 +78,10 @@ class RecommendService
         }
 
         $info = $info->toArray();
+        if(!empty($info['recommend_data'])) {
+            $info['recommend_data'] = json_decode($info['recommend_data'], true);
+        }
+
         return $info;
     }
 
@@ -132,6 +138,61 @@ class RecommendService
         }else {
             return outputError('更改失败');
         }
+
+    }
+
+    public function addItem($params) {
+        if(!isset($params['recommend_id']) || $params['recommend_id'] <= 0) {
+            return outputError('请输入推荐位ID');
+        }
+
+        $PostRecommendData = isset($params['recommend_data']) ? $params['recommend_data'] : [];
+        if(empty($PostRecommendData)) {
+            return outputError('请输入推荐数据');
+        }
+
+        $dataIds = array_column($PostRecommendData, 'id');
+        $recommendData = [];
+        foreach($PostRecommendData as $item) {
+            $recomDataInfo = [];
+            $recomDataInfo['id'] = $item['id'];
+            $recommendData[] = $recomDataInfo;
+        }
+
+        $recommendId = intval($params['recommend_id']);
+        unset($params['recommend_id']);
+        $info = $this->info($recommendId);
+        if(empty($info)) {
+            return outputError('推荐位信息不存在');
+        }
+
+        // checkRecommendDataByType();
+
+        Db::startTrans();
+        $currentTime = date('Y-m-d H:i:s');
+        $recommend = [];
+        $recommend['recommend_data'] = json_encode($recommendData);
+        $recommend['update_time'] = $currentTime;
+        $RecommendModel = new RecommendModel();
+        $res = $RecommendModel->where('recommend_id', $recommendId)->update($recommend);
+        if(!$res) {
+            return outputError('保存推荐数据失败');
+        }
+
+        $oldRecommendData = is_array($info['recommend_data']) ? json_encode($info['recommend_data']) : $info['recommend_data'];
+        $recommendLog = $info;
+        $recommendLog['recommend_data'] = $oldRecommendData;
+        $recommendLog['recommend_time'] = $info['create_time'];
+        $recommendLog['create_time'] = $currentTime;
+        $RecommendLogModel = new RecommendLogModel();
+        $logRes = $RecommendLogModel->insert($recommendLog);
+        if(!$logRes) {
+            Db::rollback();
+            return outputError('保存推荐日志数据失败');
+        }
+
+        Db::commit();
+        return outputSuccess('编辑成功');
 
     }
 

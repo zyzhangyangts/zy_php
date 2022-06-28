@@ -97,4 +97,10 @@ class Recommend extends BaseController
         return $result;
     }
 
+    public function addItem(RecommendService $RecommendService) {
+        $params = $this->request->param();
+        $result = $RecommendService->addItem($params);
+        return $result;
+    }
+
 }
