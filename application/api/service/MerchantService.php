@@ -7,6 +7,7 @@
 namespace app\api\service;
 
 
+use app\api\model\GoodsModel;
 use think\facade\Config;
 use think\facade\Request;
 use UnexpectedValueException;
@@ -211,6 +212,29 @@ class MerchantService
         }
 
         return true;
+    }
+
+    /**
+     * 获取列表 通过 IDS
+     * @param $merchantIds
+     * @return array
+     * @throws \think\exception\DbException
+     * @throws db\exception\DataNotFoundException
+     * @throws db\exception\ModelNotFoundException
+     */
+    public function getListByIds($merchantIds) {
+        if(empty($merchantIds)) {
+            return [];
+        }
+
+        $list = MerchantModel::where('merchant_id', 'in', $merchantIds)->select();
+        if($list->isEmpty()) {
+            return [];
+        }
+
+        $list = $list->toArray();
+        $list = arrayMap($list, 'merchant_id');
+        return $list;
     }
 
 }

@@ -135,4 +135,28 @@ class GoodsClassService
         }
 
     }
+
+    /**
+     * 获取列表通过IDS
+     * @param $goodsClassIds
+     * @return array
+     * @throws \think\exception\DbException
+     * @throws db\exception\DataNotFoundException
+     * @throws db\exception\ModelNotFoundException
+     */
+    public function getListByIds($goodsClassIds) {
+        if(empty($goodsClassIds)) {
+            return [];
+        }
+
+        $list = GoodsClassModel::where('goods_class_id', 'in', $goodsClassIds)->select();
+        if($list->isEmpty()) {
+            return [];
+        }
+
+        $list = $list->toArray();
+        $list = arrayMap($list, 'goods_class_id');
+        return $list;
+    }
+
 }

@@ -453,4 +453,27 @@ class GoodsService
         return true;
     }
 
+    /**
+     * 获取列表 通过 IDS
+     * @param $goodsIds
+     * @return array
+     * @throws \think\exception\DbException
+     * @throws db\exception\DataNotFoundException
+     * @throws db\exception\ModelNotFoundException
+     */
+    public function getListByIds($goodsIds) {
+        if(empty($goodsIds)) {
+            return [];
+        }
+
+        $list = GoodsModel::where('goods_id', 'in', $goodsIds)->select();
+        if($list->isEmpty()) {
+            return [];
+        }
+
+        $list = $list->toArray();
+        $list = arrayMap($list, 'goods_id');
+        return $list;
+    }
+
 }

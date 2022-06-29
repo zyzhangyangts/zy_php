@@ -112,3 +112,63 @@ function isProd() {
 function getEnvName() {
     return getenv('ENV');
 }
+
+/**
+ * 推荐类型列表
+ * @return string[]
+ */
+function recommendTypeList() {
+    $list = [
+        1 => '分类',
+        2 => '商品',
+        3 => '商户',
+    ];
+
+    return $list;
+}
+
+/**
+ * 推荐模式列表
+ * @return string[]
+ */
+function recommendModelList() {
+    $list = [
+        1 => '普通推荐',
+        2 => '联合推荐',
+    ];
+
+    return $list;
+}
+
+/**
+ * 展示类型
+ * @return string[]
+ */
+function showTypeList() {
+    $list = [
+        1 => '分类金刚位',
+        2 => '简要商品',
+        3 => '商品列表',
+        4 => '商户列表',
+        5 => '分类商品列表',
+    ];
+
+    return $list;
+}
+
+/**
+ * 数组 字段映射
+ * @param $array
+ * @param $field
+ * @return array
+ */
+function arrayMap($array, $field) {
+    $list = [];
+    foreach($array as $item) {
+        $key = isset($item[$field]) ? $item[$field] : '';
+        $list[$key] = $item;
+    }
+
+    return $list;
+}
+

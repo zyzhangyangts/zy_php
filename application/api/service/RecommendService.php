@@ -12,6 +12,9 @@ use think\facade\Request;
 use UnexpectedValueException;
 use app\api\model\RecommendModel;
 use app\api\model\RecommendLogModel;
+use app\api\service\GoodsClassService;
+use app\api\service\GoodsService;
+use app\api\service\MerchantService;
 use think\db;
 
 class RecommendService
@@ -22,6 +25,11 @@ class RecommendService
      * @return array
      */
     public function add($params) {
+        $checkResult = $this->checkParams($params);
+        if($checkResult['status'] != 200) {
+            return $checkResult;
+        }
+
         $RecommendModel = new RecommendModel();
         $params['recommend_data'] = '';
         $params['status'] = 1;
@@ -40,6 +48,11 @@ class RecommendService
             return outputError('请输入推荐位ID');
         }
 
+        $checkResult = $this->checkParams($params);
+        if($checkResult['status'] != 200) {
+            return $checkResult;
+        }
+
         $recommendId = intval($params['recommend_id']);
         unset($params['recommend_id']);
         $info = $this->info($recommendId);
@@ -55,6 +68,26 @@ class RecommendService
         }
 
         return outputSuccess('编辑成功');
+    }
+
+    public function checkParams($params) {
+        $recommendTypeList = recommendTypeList();
+        $recommendModelList = recommendModelList();
+        $showTypeList = showTypeList();
+        if(!isset($params['recommend_type']) || !isset($recommendTypeList[$params['recommend_type']])) {
+            return outputError('推荐类型不存在');
+        }
+
+        if(!isset($params['recommend_model']) || !isset($recommendModelList[$params['recommend_model']])) {
+            return outputError('推荐模式不存在');
+        }
+
+        if(!isset($params['show_type']) || !isset($showTypeList[$params['show_type']])) {
+            return outputError('展示类型不存在');
+        }
+
+
+        return outputSuccess('success');
     }
 
     /**
@@ -166,7 +199,10 @@ class RecommendService
             return outputError('推荐位信息不存在');
         }
 
-        // checkRecommendDataByType();
+        $checkResult = $this->checkRecommendDataByType($dataIds, $info['recommend_type']);
+        if($checkResult['status'] != 200) {
+            return $checkResult;
+        }
 
         Db::startTrans();
         $currentTime = date('Y-m-d H:i:s');
@@ -194,6 +230,47 @@ class RecommendService
         Db::commit();
         return outputSuccess('编辑成功');
 
+    }
+
+    public function checkRecommendDataByType($recommendDataIds, $recommendType) {
+        if(empty($recommendDataIds)) {
+            return outputError('推荐数据IDS为空');
+        }
+
+        $dataName = '';
+        if($recommendType == 1) {
+            $dataName = '商品分类';
+            $goodsClassService = new GoodsClassService();
+            $dataList = $goodsClassService->getListByIds($recommendDataIds);
+        }else if($recommendType == 2) {
+            $dataName = '商品';
+            $goodsService = new GoodsService();
+            $dataList = $goodsService->getListByIds($recommendDataIds);
+        }else if($recommendType == 3) {
+            $dataName = '商户';
+            $MerchantService = new MerchantService();
+            $dataList = $MerchantService->getListByIds($recommendDataIds);
+        }
+
+        $errorArr = [];
+        foreach($recommendDataIds as $id) {
+            if(!isset($dataList[$id])) {
+                $errorArr[] = $dataName.'数据不存在 id: '.$id.' ';
+                continue;
+            }
+
+            if($dataList[$id]['status'] <= 0) {
+                $errorArr[] = $dataName.'数据状态无效 id: '.$id.' ';
+                continue;
+            }
+        }
+
+        if(!empty($errorArr)) {
+            $errorStr = implode('|', $errorArr);
+            return outputError($errorStr);
+        }
+
+        return outputSuccess('success');
     }
 
 
