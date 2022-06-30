@@ -6,7 +6,7 @@ namespace app\api\validate;
 
 use LinCmsTp5\validate\BaseValidate;
 
-class Recommend extends BaseValidate
+class IndexRecommend extends BaseValidate
 {
     protected $rule = [
         'recommend_id' => 'require',

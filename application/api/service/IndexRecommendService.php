@@ -7,13 +7,14 @@
 namespace app\api\service;
 
 
+use app\index\controller\Index;
 use think\facade\Config;
 use think\facade\Request;
 use UnexpectedValueException;
 use app\api\model\IndexRecommendModel;
 use app\api\service\GoodsClassService;
 use app\api\service\GoodsService;
-use app\api\service\MerchantService;
+use app\api\service\RecommendService;
 use think\db;
 
 class IndexRecommendService
@@ -99,8 +100,24 @@ class IndexRecommendService
             $IndexRecommendModel->where('status', $status);
         }
 
-        $allData = $IndexRecommendModel->paginate($pageSize, false, ["page" => $page])->order('weight', 'desc')->toArray();
+        $allData = $IndexRecommendModel->order('weight', 'asc')->paginate($pageSize, true, ["page" => $page])->toArray();
         //var_dump($IndexRecommendModel->getlastsql());exit;
+        if(!empty($allData) && isset($allData['data']) && !empty($allData['data'])) {
+            $list = [];
+            $recommendIds = [];
+            foreach($allData['data'] as $k => $item) {
+                $recommendIds[] = $item['recommend_id'];
+            }
+
+            $recommendService = new RecommendService();
+            $reccommendList = $recommendService->getListByIds($recommendIds);
+            foreach($allData['data'] as $k => $item) {
+                $recommendInfo = isset($reccommendList[$item['recommend_id']]) ? $reccommendList[$item['recommend_id']] : [];
+                $allData['data'][$k]['recommend'] = $recommendInfo;
+            }
+
+        }
+
         return $allData;
     }
 
@@ -133,5 +150,6 @@ class IndexRecommendService
         }
 
     }
+
 
 }

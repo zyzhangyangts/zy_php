@@ -274,4 +274,28 @@ class RecommendService
     }
 
 
+    /**
+     * 获取列表 通过 IDS
+     * @param $recommendIds
+     * @return array
+     * @throws \think\exception\DbException
+     * @throws db\exception\DataNotFoundException
+     * @throws db\exception\ModelNotFoundException
+     */
+    public function getListByIds($recommendIds) {
+        if(empty($recommendIds)) {
+            return [];
+        }
+
+        $list = RecommendModel::where('recommend_id', 'in', $recommendIds)->select();
+        if($list->isEmpty()) {
+            return [];
+        }
+
+        $list = $list->toArray();
+        $list = arrayMap($list, 'recommend_id');
+        return $list;
+    }
+
+
 }

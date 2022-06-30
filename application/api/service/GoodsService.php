@@ -315,6 +315,7 @@ class GoodsService
 
         $allData = $GoodsModel->paginate($pageSize, false, ["page" => $page])->toArray();
         //var_dump($GoodsModel->getlastsql());exit;
+        var_export($allData);exit;
         return $allData;
     }
 

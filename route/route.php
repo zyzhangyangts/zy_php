@@ -137,6 +137,17 @@ Route::group('', function () {
         // 推荐位.添加推荐明细
         Route::post('recommend/addItem', 'api/v1.Recommend/addItem');
 
+        // 页面推荐-创建
+        Route::post('index_recommend/add', 'api/v1.IndexRecommend/add');
+        // 页面推荐-编辑
+        Route::post('index_recommend/edit', 'api/v1.IndexRecommend/edit');
+        // 页面推荐-信息
+        Route::get('index_recommend/info', 'api/v1.IndexRecommend/info');
+        // 页面推荐-列表
+        Route::get('index_recommend/list', 'api/v1.IndexRecommend/list');
+        // 页面推荐-更改状态
+        Route::get('index_recommend/setStatus', 'api/v1.IndexRecommend/setStatus');
+
     });
 })->middleware(['Authentication', 'ReflexValidate'])->allowCrossDomain();
 

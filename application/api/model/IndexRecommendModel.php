@@ -11,7 +11,7 @@ namespace app\api\model;
 
 use think\model\concern\SoftDelete;
 
-class RecommendModel extends BaseModel
+class IndexRecommendModel extends BaseModel
 {
     protected $table = 'xs_index_recommend';
     protected $pk    = 'index_recommend_id';
