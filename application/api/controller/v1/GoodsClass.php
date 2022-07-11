@@ -69,9 +69,9 @@ class GoodsClass extends BaseController
         return outputSuccess('', $info);
     }
 
-    public function list(GoodsClassService $GoodsClassService) {
+    public function lists(GoodsClassService $GoodsClassService) {
         $params = $this->request->param();
-        $result = $GoodsClassService->list($params);
+        $result = $GoodsClassService->lists($params);
         return outputSuccess('', $result);
     }
 

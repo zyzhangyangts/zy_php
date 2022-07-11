@@ -90,7 +90,7 @@ class IndexRecommendService
      * @return array
      * @throws \think\exception\DbException
      */
-    public function list($params) {
+    public function lists($params) {
         $page = isset($params['page']) ? $params['page'] : 1;
         $pageSize = isset($params['page_size']) ? $params['page_size'] : 20;
         $status = isset($params['status']) ? $params['status'] : -1;

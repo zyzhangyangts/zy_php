@@ -1,54 +1,55 @@
 <?php
 /**
- * 商品分类 service
+ * 商圈 service
  * @author zy
  */
 
 namespace app\api\service;
 
 
-use app\api\model\MerchantModel;
+use app\api\model\GoodsModel;
 use think\facade\Config;
 use think\facade\Request;
 use UnexpectedValueException;
-use app\api\model\GoodsClassModel;
+use app\api\model\MarketModel;
+use app\api\model\marketGoodsClassModel;
 use think\db;
 
-class GoodsClassService
+class MarketService
 {
     /**
-     * 创建商品分类
+     * 创建商圈
      * @param $params
      * @return array
      */
     public function add($params) {
-        $GoodsClassModel = new GoodsClassModel();
+        $MarketModel = new MarketModel();
         $params['status'] = 1;
         $params['create_time'] = date('Y-m-d H:i:s');
         $params['update_time'] = date('Y-m-d H:i:s');
-        $res = $GoodsClassModel->insert($params);
+        $res = $MarketModel->insert($params);
         if(!$res) {
-            return outputError('创建商品分类失败');
+            return outputError('创建商圈失败');
         }
 
-        return outputSuccess('创建商品分类成功');
+        return outputSuccess('创建商圈成功');
     }
 
     public function edit($params) {
-        if(!isset($params['goods_class_id']) || $params['goods_class_id'] <= 0) {
-            return outputError('请输入商品分类ID');
+        if(!isset($params['market_id']) || $params['market_id'] <= 0) {
+            return outputError('请输入商圈ID');
         }
 
-        $goodsClassId = intval($params['goods_class_id']);
-        unset($params['goods_class_id']);
-        $info = $this->info($goodsClassId);
+        $marketId = intval($params['market_id']);
+        unset($params['market_id']);
+        $info = $this->info($marketId);
         if(empty($info)) {
-            return outputError('商品分类信息不存在');
+            return outputError('商圈信息不存在');
         }
 
-        $GoodsClassModel = new GoodsClassModel();
+        $MarketModel = new MarketModel();
         $params['update_time'] = date('Y-m-d H:i:s');
-        $res = $GoodsClassModel->where('goods_class_id', $goodsClassId)->update($params);
+        $res = $MarketModel->where('market_id', $marketId)->update($params);
         if(!$res) {
             return outputError('编辑失败');
         }
@@ -57,21 +58,21 @@ class GoodsClassService
     }
 
     /**
-     * 获取商品分类信息
-     * @param $goodsClassId
+     * 获取商圈信息
+     * @param $marketId
      * @return array
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function info($goodsClassId) {
-        $goodsClassId = intval($goodsClassId);
-        if($goodsClassId <= 0) {
+    public function info($marketId) {
+        $marketId = intval($marketId);
+        if($marketId <= 0) {
             return [];
         }
 
-        $GoodsClassModel = new GoodsClassModel();
-        $info = $GoodsClassModel->where('goods_class_id', $goodsClassId)->find();
+        $MarketModel = new MarketModel();
+        $info = $MarketModel->where('market_id', $marketId)->find();
         if(empty($info)) {
             return [];
         }
@@ -89,35 +90,42 @@ class GoodsClassService
     public function lists($params) {
         $page = isset($params['page']) ? $params['page'] : 1;
         $pageSize = isset($params['page_size']) ? $params['page_size'] : 20;
-        $parentId = isset($params['parent_id']) ? $params['parent_id'] : -1;
+        $marketId = isset($params['market_id']) ? $params['market_id'] : 0;
         $status = isset($params['status']) ? $params['status'] : -1;
 
-        $GoodsClassModel = GoodsClassModel::where('1=1');
-        if($parentId > -1) {
-            $GoodsClassModel->where('parent_id', $parentId);
+        $MarketModel = MarketModel::where('1=1');
+        if($marketId > 0) {
+            $MarketModel->where('market_id', $marketId);
         }
 
         if($status > -1) {
-            $GoodsClassModel->where('status', $status);
+            $MarketModel->where('status', $status);
         }
 
-        $allData = $GoodsClassModel->paginate($pageSize, false, ["page" => $page])->toArray();
-        //var_dump($GoodsClassModel->getlastsql());exit;
+        $allData = $MarketModel->paginate($pageSize, false, ["page" => $page])->toArray();
+        if(isset($allData['data']) && !empty($allData['data'])) {
+            $marketIds = array_column($allData['data'], 'market_id');
+
+            foreach($allData['data'] as $item) {
+
+            }
+        }
+        //var_dump($MarketModel->getlastsql());exit;
         return $allData;
     }
 
     /**
      * 设置状态
-     * @param $goodsClassId
+     * @param $marketId
      * @param $status
      * @return array
      * @throws \think\Exception
      * @throws \think\exception\PDOException
      */
-    public function setStatus($goodsClassId, $status) {
-        $goodsClassId = intval($goodsClassId);
-        if($goodsClassId <= 0) {
-            return outputError('请输入商户ID');
+    public function setStatus($marketId, $status) {
+        $marketId = intval($marketId);
+        if($marketId <= 0) {
+            return outputError('请输入商圈ID');
         }
 
         if(!in_array($status, [1, 0])) {
@@ -127,7 +135,7 @@ class GoodsClassService
         $update = [];
         $update['status'] = $status;
         $update['update_time'] = date('Y-m-d H:i:s');
-        $res = GoodsClassModel::where('goods_class_id', $goodsClassId)->update($update);
+        $res = MarketModel::where('market_id', $marketId)->update($update);
         if($res) {
             return outputSuccess('更改成功');
         }else {
@@ -136,26 +144,27 @@ class GoodsClassService
 
     }
 
+
     /**
-     * 获取列表通过IDS
-     * @param $goodsClassIds
+     * 获取列表 通过 IDS
+     * @param $marketIds
      * @return array
      * @throws \think\exception\DbException
      * @throws db\exception\DataNotFoundException
      * @throws db\exception\ModelNotFoundException
      */
-    public function getListByIds($goodsClassIds) {
-        if(empty($goodsClassIds)) {
+    public function getListByIds($marketIds) {
+        if(empty($marketIds)) {
             return [];
         }
 
-        $list = GoodsClassModel::where('goods_class_id', 'in', $goodsClassIds)->select();
+        $list = MarketModel::where('market_id', 'in', $marketIds)->select();
         if($list->isEmpty()) {
             return [];
         }
 
         $list = $list->toArray();
-        $list = arrayMap($list, 'goods_class_id');
+        $list = arrayMap($list, 'market_id');
         return $list;
     }
 

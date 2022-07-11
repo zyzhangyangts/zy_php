@@ -278,7 +278,7 @@ class GoodsService
      * @return array
      * @throws \think\exception\DbException
      */
-    public function list($params) {
+    public function lists($params) {
         $page = isset($params['page']) ? $params['page'] : 1;
         $pageSize = isset($params['page_size']) ? $params['page_size'] : 20;
         $marketId = isset($params['market_id']) ? $params['market_id'] : -1;
@@ -313,7 +313,7 @@ class GoodsService
             $GoodsModel->where('status', $status);
         }
 
-        $allData = $GoodsModel->paginate($pageSize, false, ["page" => $page])->toArray();
+        $allData = $GoodsModel->order('goods_id', 'desc')->paginate($pageSize, false, ["page" => $page])->toArray();
         //var_dump($GoodsModel->getlastsql());exit;
         var_export($allData);exit;
         return $allData;

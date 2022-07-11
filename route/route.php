@@ -95,7 +95,7 @@ Route::group('', function () {
         // 商户创建
         Route::get('merchant/info', 'api/v1.Merchant/info');
         // 商户创建
-        Route::get('merchant/list', 'api/v1.Merchant/list');
+        Route::get('merchant/lists', 'api/v1.Merchant/lists');
         // 商户更改状态
         Route::get('merchant/setStatus', 'api/v1.Merchant/setStatus');
 
@@ -107,7 +107,7 @@ Route::group('', function () {
         // 商品分类创建
         Route::get('goods_class/info', 'api/v1.GoodsClass/info');
         // 商品分类创建
-        Route::get('goods_class/list', 'api/v1.GoodsClass/list');
+        Route::get('goods_class/lists', 'api/v1.GoodsClass/lists');
         // 商品分类更改状态
         Route::get('goods_class/setStatus', 'api/v1.GoodsClass/setStatus');
 
@@ -119,7 +119,7 @@ Route::group('', function () {
         // 商品创建
         Route::get('goods/info', 'api/v1.Goods/info');
         // 商品创建
-        Route::get('goods/list', 'api/v1.Goods/list');
+        Route::get('goods/lists', 'api/v1.Goods/lists');
         // 商品更改状态
         Route::get('goods/setStatus', 'api/v1.Goods/setStatus');
 
@@ -130,7 +130,7 @@ Route::group('', function () {
         // 推荐位信息
         Route::get('recommend/info', 'api/v1.Recommend/info');
         // 推荐位创建
-        Route::get('recommend/list', 'api/v1.Recommend/list');
+        Route::get('recommend/lists', 'api/v1.Recommend/lists');
         // 推荐位更改状态
         Route::get('recommend/setStatus', 'api/v1.Recommend/setStatus');
 
@@ -144,7 +144,7 @@ Route::group('', function () {
         // 页面推荐-信息
         Route::get('index_recommend/info', 'api/v1.IndexRecommend/info');
         // 页面推荐-列表
-        Route::get('index_recommend/list', 'api/v1.IndexRecommend/list');
+        Route::get('index_recommend/lists', 'api/v1.IndexRecommend/lists');
         // 页面推荐-更改状态
         Route::get('index_recommend/setStatus', 'api/v1.IndexRecommend/setStatus');
 

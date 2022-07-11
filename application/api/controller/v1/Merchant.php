@@ -77,9 +77,9 @@ class Merchant extends BaseController
      * @return array
      * @throws \think\exception\DbException
      */
-    public function list(MerchantService $MerchantService) {
+    public function lists(MerchantService $MerchantService) {
         $params = $this->request->param();
-        $result = $MerchantService->list($params);
+        $result = $MerchantService->lists($params);
         return outputSuccess('', $result);
     }
 

@@ -77,9 +77,9 @@ class IndexRecommend extends BaseController
      * @return array
      * @throws \think\exception\DbException
      */
-    public function list(IndexRecommendService $IndexRecommendService) {
+    public function lists(IndexRecommendService $IndexRecommendService) {
         $params = $this->request->param();
-        $result = $IndexRecommendService->list($params);
+        $result = $IndexRecommendService->lists($params);
         return outputSuccess('', $result);
     }
 

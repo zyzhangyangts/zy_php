@@ -13,6 +13,7 @@ use think\facade\Request;
 use UnexpectedValueException;
 use app\api\model\MerchantModel;
 use app\api\model\MerchantGoodsClassModel;
+use app\api\service\MarketService;
 use think\db;
 
 class MerchantService
@@ -87,7 +88,7 @@ class MerchantService
      * @return array
      * @throws \think\exception\DbException
      */
-    public function list($params) {
+    public function lists($params) {
         $page = isset($params['page']) ? $params['page'] : 1;
         $pageSize = isset($params['page_size']) ? $params['page_size'] : 20;
         $marketId = isset($params['market_id']) ? $params['market_id'] : 0;
@@ -102,7 +103,16 @@ class MerchantService
             $MerchantModel->where('status', $status);
         }
 
-        $allData = $MerchantModel->paginate($pageSize, false, ["page" => $page])->toArray();
+        $allData = $MerchantModel->order('merchant_id', 'desc')->paginate($pageSize, false, ["page" => $page])->toArray();
+        if(isset($allData['data']) && !empty($allData['data'])) {
+            $marketIds = array_column($allData['data'], 'market_id');
+            $MarketService = new MarketService();
+            $marketLists = $MarketService->getListByIds($marketIds);
+            foreach($allData['data'] as $k => $item) {
+                $market = isset($marketLists[$item['market_id']]) ? $marketLists[$item['market_id']] : [];
+                $allData['data'][$k]['market_name'] = isset($market['market_name']) ? $market['market_name'] : '';
+            }
+        }
         //var_dump($MerchantModel->getlastsql());exit;
         return $allData;
     }

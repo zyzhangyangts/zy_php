@@ -77,9 +77,9 @@ class Recommend extends BaseController
      * @return array
      * @throws \think\exception\DbException
      */
-    public function list(RecommendService $RecommendService) {
+    public function lists(RecommendService $RecommendService) {
         $params = $this->request->param();
-        $result = $RecommendService->list($params);
+        $result = $RecommendService->lists($params);
         return outputSuccess('', $result);
     }
 
