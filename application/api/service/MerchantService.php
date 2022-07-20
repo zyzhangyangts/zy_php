@@ -94,7 +94,7 @@ class MerchantService
         $marketId = isset($params['market_id']) ? $params['market_id'] : 0;
         $status = isset($params['status']) ? $params['status'] : -1;
 
-        $MerchantModel = MerchantModel::where('1=1');
+        $MerchantModel = MerchantModel::where('1=1'); 
         if($marketId > 0) {
             $MerchantModel->where('market_id', $marketId);
         }

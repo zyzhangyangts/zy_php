@@ -88,6 +88,17 @@ Route::group('', function () {
             Route::post('add', 'api/v1.Book/add');
         });
 
+        // 商圈创建
+        Route::post('market/add', 'api/v1.Market/add');
+        // 商圈编辑
+        Route::post('market/edit', 'api/v1.Market/edit');
+        // 商圈创建
+        Route::get('market/info', 'api/v1.Market/info');
+        // 商圈创建
+        Route::get('market/lists', 'api/v1.Market/lists');
+        // 商圈更改状态
+        Route::get('market/setStatus', 'api/v1.Market/setStatus');
+
         // 商户创建
         Route::post('merchant/add', 'api/v1.Merchant/add');
         // 商户编辑
